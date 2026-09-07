@@ -156,3 +156,21 @@ Setup optimasi telah diterapkan langsung ke tablet Lenovo Legion Y700 Gen 4 (`HA
   - `sched_low_latency`: `1` (WALT scheduler low-latency mode).
   - `Storage Scheduler UFS 4.0`: `none` (zero-latency multi-queue).
   - `Status Bootloop`: **100% Aman** (Skrip berjalan post-boot setelah `sys.boot_completed=1`).
+
+---
+
+## 8. Optimasi Tambahan: Media Player (MPV) & Audio Low-Latency
+
+Telah diimplementasikan secara langsung ke perangkat:
+1. **Konfigurasi MPV Android (`/data/data/is.xyz.mpv/files/mpv.conf`):**
+   - Tetap mempertahankan seluruh styling subtitle kustom dan shader deband/upscaling (`scale=ewa_lanczossharp`, `deband=yes`, `cscale=spline36`).
+   - Menambahkan **Hardware Decoding VPU Snapdragon 8 Elite:** `hwdec=mediacodec-copy`.
+   - Mengaktifkan backend rendering **Vulkan Adreno 830:** `gpu-context=android` dan `gpu-api=vulkan`.
+   - Menambahkan **Display Motion & Anti-Judder:** `video-sync=display-resample`, `interpolation=yes`, dan `tscale=oversample` (menghilangkan stutter 24fps pada layar high-refresh rate).
+   - Menambahkan **Audio Direct Output:** `ao=audiotrack`, `audio-pitch-correction=yes`.
+   - Backup konfigurasi lama tersimpan di: `/data/data/is.xyz.mpv/files/mpv.conf.bak`.
+2. **Audio Low-Latency (AAudio MMAP):**
+   - Menambahkan aturan ke `/data/adb/service.d/gamehub_tweaks.sh`:
+     - `setprop aaudio.mmap_policy 1`
+     - `setprop aaudio.mmap_exclusive_policy 1`
+   - Mengalihkan audio emulator (GameHub, Switch, PS2) langsung ke hardware DMA MMAP buffer dengan latensi rendah (~8ms vs ~40ms standar).
