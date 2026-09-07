@@ -97,3 +97,44 @@ graph TD
 - Cek ketersediaan node: `ls -l /dev/ntsync`
 - Cek SysV IPC: `ipcs -m`
 - Jalankan game DirectX 9 / 11 di GameHub dan pantau FPS, frame times, serta stabilitas termal.
+
+---
+
+## 5. Status Implementasi Saat Ini
+
+Semua modifikasi telah diintegrasikan pada branch git: **`y700-sapatekno`**:
+1. **Config JSON (.github/config/android15-6.6.json):**
+   - Mengunci `sublevel: 142` pada entri `lts`.
+2. **Misc Configs (.github/actions/misc/action.yml):**
+   - Menambahkan penegakan `CONFIG_ARM64_4K_PAGES=y`.
+   - Menambahkan `CONFIG_BINFMT_MISC=y`, `CONFIG_LRU_GEN=y`, dan `CONFIG_LRU_GEN_ENABLED=y`.
+3. **AnyKernel3 Auto-Tweak Injector (.github/actions/gamehub-tweaks/):**
+   - Memasukkan `gamehub_tweaks.sh` langsung ke paket zip AnyKernel3.
+   - Menginjeksi hook ke `anykernel.sh` agar script otomatis terpasang ke `/data/adb/service.d/` saat flashing di recovery/Kernel Flasher.
+4. **Main Workflow Defaults (.github/workflows/main.yml):**
+   - `bypass: true` (mencegah penolakan vermagic modul Qualcomm).
+   - `kernel_build_version: 6.6.x-android15` (fokus target Y700 Gen 4).
+   - `os_patch_level: lts` (mengambil branch sublevel 142).
+   - `brand_name: Y700-Sapatekno`.
+   - `root_flavor: KernelSU-Next`.
+   - `use_perf: true`.
+
+---
+
+## 6. Panduan Aksi User untuk Build di GitHub
+
+1. **Push Branch ke Fork GitHub Anda:**
+   ```bash
+   cd /root/y700/GKI_KernelSU_SUSFS
+   git remote set-url origin https://github.com/<USERNAME_GITHUB_ANDA>/GKI_KernelSU_SUSFS.git
+   git push -u origin y700-sapatekno
+   ```
+2. **Buka Tab Actions di Repository GitHub Fork Anda:**
+   - Pilih workflow **Build Kernels**.
+   - Klik tombol **Run workflow**.
+   - Pilih branch: **`y700-sapatekno`**.
+   - Parameter sudah otomatis terisi optimal (Branding: `Y700-Sapatekno`, Kernel: `6.6.x-android15`, Patch: `lts`, Bypass: `true`).
+   - Klik **Run workflow**.
+3. **Unduh & Flash:**
+   - Setelah job selesai, unduh file `*-AnyKernel3` dari tab Artifacts.
+   - Flash via Kernel Flasher atau TWRP di Lenovo Legion Y700 TB322FC.
