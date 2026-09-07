@@ -138,3 +138,21 @@ Semua modifikasi telah diintegrasikan pada branch git: **`y700-sapatekno`**:
 3. **Unduh & Flash:**
    - Setelah job selesai, unduh file `*-AnyKernel3` dari tab Artifacts.
    - Flash via Kernel Flasher atau TWRP di Lenovo Legion Y700 TB322FC.
+
+---
+
+## 7. Hasil Setup Riil via ADB Root (Device Live Setup)
+
+Setup optimasi telah diterapkan langsung ke tablet Lenovo Legion Y700 Gen 4 (`HA260Q3W`):
+- **Kernel Aktif:** `6.6.142-android15-Y700-Sapatekno`
+- **Driver NTSync:** `/dev/ntsync` aktif dengan izin `0666` (bebas diakses GameHub non-root).
+- **SysV IPC Subsystem:** `/proc/sysvipc` (`shm`, `sem`, `msg`) aktif sempurna.
+- **Service Persisten Boot:** `/data/adb/service.d/gamehub_tweaks.sh` (chmod 755).
+- **Verifikasi Parameter Riil:**
+  - `vm.max_map_count`: `1048576` (Cegah crash game x64/UE4/5).
+  - `fs.file-max`: `2097152`.
+  - `sched_upmigrate`: `85` (Migrasi cepat ke Prime Cores 4.32GHz).
+  - `sched_downmigrate`: `65`.
+  - `sched_low_latency`: `1` (WALT scheduler low-latency mode).
+  - `Storage Scheduler UFS 4.0`: `none` (zero-latency multi-queue).
+  - `Status Bootloop`: **100% Aman** (Skrip berjalan post-boot setelah `sys.boot_completed=1`).
