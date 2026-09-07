@@ -17,8 +17,8 @@ runs:
             echo "# Install GameHub Tweaks Service if KernelSU/Magisk environment exists" >> "${{ github.workspace }}/AnyKernel3/anykernel.sh"
             echo 'if [ -d "/data/adb/service.d" ]; then' >> "${{ github.workspace }}/AnyKernel3/anykernel.sh"
             echo '  ui_print "  • Installing GameHub Tweaks into /data/adb/service.d...";' >> "${{ github.workspace }}/AnyKernel3/anykernel.sh"
-            echo '  cp -f $home/gamehub_tweaks.sh /data/adb/service.d/gamehub_tweaks.sh;' >> "${{ github.workspace }}/AnyKernel3/anykernel.sh"
-            echo '  chmod 755 /data/adb/service.d/gamehub_tweaks.sh;' >> "${{ github.workspace }}/AnyKernel3/anykernel.sh"
+            echo '  cp -f ${AKHOME:-$PWD}/gamehub_tweaks.sh /data/adb/service.d/gamehub_tweaks.sh 2>/dev/null || true;' >> "${{ github.workspace }}/AnyKernel3/anykernel.sh"
+            echo '  chmod 755 /data/adb/service.d/gamehub_tweaks.sh 2>/dev/null || true;' >> "${{ github.workspace }}/AnyKernel3/anykernel.sh"
             echo 'fi;' >> "${{ github.workspace }}/AnyKernel3/anykernel.sh"
           fi
         fi
