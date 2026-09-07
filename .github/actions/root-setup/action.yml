@@ -109,3 +109,4 @@ runs:
       with:
         config_list: |
           CONFIG_KSU_MULTI_MANAGER_SUPPORT=n
+          CONFIG_KSU_TOOLKIT_SUPPORT=y
