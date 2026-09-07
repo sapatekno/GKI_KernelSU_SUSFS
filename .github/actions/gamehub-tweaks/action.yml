@@ -1,0 +1,41 @@
+name: 'Include GameHub Tweaks'
+description: 'Bundles gamehub_tweaks.sh and auto-install hook into AnyKernel3'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup GameHub Tweaks in AnyKernel3
+      shell: bash
+      run: |
+        set -euo pipefail
+        if [ -d "${{ github.workspace }}/AnyKernel3" ]; then
+          cat << 'SCRIPT_EOF' > "${{ github.workspace }}/AnyKernel3/gamehub_tweaks.sh"
+#!/system/bin/sh
+# GameHub Kernel Optimizer for Lenovo Legion Y700 Gen 4 (Snapdragon 8 Elite)
+[ -e /dev/ntsync ] && chmod 0666 /dev/ntsync
+sysctl -w vm.max_map_count=1048576 2>/dev/null || true
+sysctl -w fs.file-max=2097152 2>/dev/null || true
+sysctl -w vm.watermark_boost_factor=0 2>/dev/null || true
+sysctl -w vm.watermark_scale_factor=10 2>/dev/null || true
+sysctl -w vm.vfs_cache_pressure=50 2>/dev/null || true
+sysctl -w vm.swappiness=60 2>/dev/null || true
+for dev in /sys/block/sd* /sys/block/dm-* /sys/block/mmcblk*; do
+  [ -f "$dev/queue/scheduler" ] && (echo "none" > "$dev/queue/scheduler" 2>/dev/null || echo "mq-deadline" > "$dev/queue/scheduler" 2>/dev/null)
+  [ -f "$dev/queue/iostats" ] && echo "0" > "$dev/queue/iostats" 2>/dev/null || true
+  [ -f "$dev/queue/read_ahead_kb" ] && echo "512" > "$dev/queue/read_ahead_kb" 2>/dev/null || true
+done
+SCRIPT_EOF
+          chmod +x "${{ github.workspace }}/AnyKernel3/gamehub_tweaks.sh"
+
+          if [ -f "${{ github.workspace }}/AnyKernel3/anykernel.sh" ]; then
+            cat << 'HOOK_EOF' >> "${{ github.workspace }}/AnyKernel3/anykernel.sh"
+
+# Install GameHub Tweaks Service if KernelSU/Magisk environment exists
+if [ -d "/data/adb/service.d" ]; then
+  ui_print "  • Installing GameHub Tweaks into /data/adb/service.d...";
+  cp -f $home/gamehub_tweaks.sh /data/adb/service.d/gamehub_tweaks.sh;
+  chmod 755 /data/adb/service.d/gamehub_tweaks.sh;
+fi;
+HOOK_EOF
+          fi
+        fi

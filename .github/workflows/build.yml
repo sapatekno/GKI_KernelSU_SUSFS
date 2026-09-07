@@ -612,6 +612,9 @@ jobs:
           fi
         } > "$SUMMARY_FILE"
 
+    - name: Include GameHub Tweaks in AnyKernel3
+      uses: ./.github/actions/gamehub-tweaks
+
     - name: Upload Artifacts
       id: kernel-artifact
       uses: actions/upload-artifact@v7

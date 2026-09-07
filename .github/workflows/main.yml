@@ -22,7 +22,7 @@ on:
       bypass:
         description: "Apply kernel version-check bypass hack"
         type: boolean
-        default: false
+        default: true
       kernel_build_version:
         description: "Kernel Version"
         type: choice
@@ -35,16 +35,16 @@ on:
           - 6.1.x-android14
           - 6.6.x-android15
           - 6.12.x-android16
-        default: All
+        default: 6.6.x-android15
       os_patch_level:
         description: "Patch date (YYYY-MM), kernel sublevel, lts, or All (no filter)"
         required: true
         type: string
-        default: All
+        default: lts
       brand_name:
         description: "Kernel Branding"
         type: string
-        default: Wild
+        default: Y700-Sapatekno
       commit_mode:
         description: "latest = branch tips, verified = audited pins, update = build latest then promote verified pins on success"
         required: false
@@ -62,7 +62,7 @@ on:
           - KernelSU
           - ReSukiSU
           - All
-        default: All
+        default: KernelSU-Next
       use_susfs:
         description: "SUSFS"
         type: boolean
@@ -102,7 +102,7 @@ on:
       use_perf:
         description: "Performance"
         type: boolean
-        default: false
+        default: true
       test_release_notes:
         description: "Render release notes preview only (skip all builds + release)"
         type: boolean
